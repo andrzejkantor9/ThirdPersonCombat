@@ -1,0 +1,18 @@
+{
+    "name": "TPCombat.States.Player",
+    "rootNamespace": "TPCombat.States.Player",
+    "references": [
+        "GUID:0febe1ed11a0f124ba9fc0de7b191803",
+        "GUID:0230001a3a45c464c8a82041e109d202",
+        "GUID:f2f67dcde58c1ac4cb6dee1ec9399f84"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
