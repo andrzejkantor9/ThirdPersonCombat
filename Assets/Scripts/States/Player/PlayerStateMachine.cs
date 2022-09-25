@@ -1,6 +1,8 @@
 using UnityEngine;
+using UnityEngine.Assertions;
 
 using TPCombat.Input;
+using TPCombat.Debug;
 
 //Program Files (x86)\Unity\<engine version>\Editor\Data\Resources\ScriptTemplates
 namespace TPCombat.States.Player
@@ -8,14 +10,24 @@ namespace TPCombat.States.Player
     public class PlayerStateMachine : StateMachine
     {
         #region Config
-        //[Header("CONFIG")]
+        [field: Header("CONFIG")]
+        [field: SerializeField]
+        public float FreeLookMovementSpeed {get; private set;}
+        [field: SerializeField]
+        public float RotationDamping {get; private set;}
         #endregion
 
         #region Cache
         [field: Header("CACHE")]
-    	//[Space(8f)]
+    	[field: Space(8f)]
         [field: SerializeField]
         public InputReader InputReader {get; private set;}
+        [field: SerializeField]
+        public CharacterController CharacterController {get; private set;}
+        [field: SerializeField]
+        public Animator Animator {get; private set;}
+
+        public Transform MainCameraTransform {get; private set;}
         #endregion
 
         #region States
@@ -30,9 +42,18 @@ namespace TPCombat.States.Player
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
         #region EngineMethods & Contructors
+        private void Awake() 
+        {
+            CustomLogger.AssertNotNull(InputReader, "InputReader", this);
+            CustomLogger.AssertNotNull(CharacterController, "CharacterController", this);
+            CustomLogger.AssertNotNull(Animator, "Animator", this);
+        }
+        
         private void Start() 
         {
-            SwitchState(new PlayerTestState(this));
+            MainCameraTransform = Camera.main.transform;
+
+            SwitchState(new PlayerFreeLookState(this));
         }
         #endregion
 

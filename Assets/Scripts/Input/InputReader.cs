@@ -18,6 +18,7 @@ namespace TPCombat.Input
         #endregion
 
         #region States
+        public Vector2 MovementValue {get; private set;}
         #endregion
 
         #region Events & Statics
@@ -63,6 +64,15 @@ namespace TPCombat.Input
             {
                 onDodgeEvent?.Invoke();
             }
+        }
+
+        public void OnMove(InputAction.CallbackContext context)
+        {
+            MovementValue = context.ReadValue<Vector2>();
+        }
+
+        public void OnLook(InputAction.CallbackContext context)
+        {
         }
         #endregion
 
