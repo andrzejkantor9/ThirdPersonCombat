@@ -16,7 +16,10 @@ namespace TPCombat.States.Player
         //[Space(8f)]
 
         readonly int FREE_LOOK_SPEED_ANIMID = Animator.StringToHash("FreeLookSpeed");
+        readonly int FREE_LOOK_BLEND_TREE_ANIMID = Animator.StringToHash("FreeLookBlendTree");
+
         const float ANIMATOR_DAMP_TIME = 0.1f;
+        const float CROSS_FADE_DURATION = 0.2f;
         #endregion
 
         #region States
@@ -42,18 +45,26 @@ namespace TPCombat.States.Player
         #region Interfaces & Inheritance
         public override void Enter()
         {
-            base.Enter();            
+            base.Enter();
+            
+            _stateMachine.InputReader.onTargetInput += OnTarget;
+
+            _stateMachine.Animator.CrossFadeInFixedTime(FREE_LOOK_BLEND_TREE_ANIMID, CROSS_FADE_DURATION);
         }
         
         public override void Tick(float deltaTime)
         {
             base.Tick(deltaTime);
 
-            Vector3 movement = Calculatemovement();
-            
-            _stateMachine.CharacterController.Move(movement * _stateMachine.FreeLookMovementSpeed * deltaTime);
-            if(_stateMachine.InputReader.MovementValue != Vector2.zero)
+            if(_stateMachine.InputReader.IsAttacking)
             {
+                _stateMachine.SwitchState(new PlayerAttackingState(_stateMachine, 0));
+            }
+            else if(_stateMachine.InputReader.MovementValue != Vector2.zero)
+            {    
+                Vector3 movement = Calculatemovement();
+                Move(movement * _stateMachine.FreeLookMovementSpeed, deltaTime);
+
                 FaceMovementDirection(movement, deltaTime);
                 _stateMachine.Animator.SetFloat(FREE_LOOK_SPEED_ANIMID, 1f, ANIMATOR_DAMP_TIME, deltaTime);
             }
@@ -68,10 +79,18 @@ namespace TPCombat.States.Player
         public override void Exit()
         {
             base.Exit();
+            _stateMachine.InputReader.onTargetInput -= OnTarget;
         }
         #endregion
 
         #region Events & Statics
+        void OnTarget()
+        {
+            if(_stateMachine.Targeter.SelectTarget())
+            {
+                _stateMachine.SwitchState(new PlayerTargetingState(_stateMachine));
+            }
+        }
         #endregion
 
         #region PrivateMethods

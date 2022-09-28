@@ -3,8 +3,10 @@ using UnityEngine.Assertions;
 
 using TPCombat.Input;
 using TPCombat.Debug;
+using TPCombat.Targeting;
+using TPCombat.Physics;
+using TPCombat.Combat;
 
-//Program Files (x86)\Unity\<engine version>\Editor\Data\Resources\ScriptTemplates
 namespace TPCombat.States.Player
 {
     public class PlayerStateMachine : StateMachine
@@ -14,18 +16,31 @@ namespace TPCombat.States.Player
         [field: SerializeField]
         public float FreeLookMovementSpeed {get; private set;}
         [field: SerializeField]
+        public float TargetingMovementSpeed {get; private set;}
+        [field: SerializeField]
         public float RotationDamping {get; private set;}
         #endregion
 
         #region Cache
         [field: Header("CACHE")]
     	[field: Space(8f)]
+        
         [field: SerializeField]
         public InputReader InputReader {get; private set;}
         [field: SerializeField]
+        public Animator Animator {get; private set;}
+
+        [field: SerializeField]
         public CharacterController CharacterController {get; private set;}
         [field: SerializeField]
-        public Animator Animator {get; private set;}
+        public  ForceReceiver ForceReceiver {get; private set;}
+
+        [field: SerializeField]
+        public Targeter Targeter {get; private set;}
+        [field: SerializeField]
+        public Attack[] Attacks {get; private set;}
+        [field: SerializeField]
+        public WeaponDamage WeaponDamage {get; private set;}
 
         public Transform MainCameraTransform {get; private set;}
         #endregion
@@ -47,6 +62,8 @@ namespace TPCombat.States.Player
             CustomLogger.AssertNotNull(InputReader, "InputReader", this);
             CustomLogger.AssertNotNull(CharacterController, "CharacterController", this);
             CustomLogger.AssertNotNull(Animator, "Animator", this);
+            CustomLogger.AssertNotNull(Targeter, "Targeter", this);
+            CustomLogger.AssertNotNull(ForceReceiver, "ForceReceiver", this);
         }
         
         private void Start() 

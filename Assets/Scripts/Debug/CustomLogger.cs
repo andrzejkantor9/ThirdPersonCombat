@@ -22,15 +22,19 @@ namespace TPCombat.Debug
 {
     public enum LogCategory : byte
     {
-        Menus,
+        Animation,
         Widgets,
         HUD,
+        Combat,
         Camera,
+        Enemies,
+        Managers,
+        Materials,
+        Menus,
         Music,
         Voices,
         SFX,
         VFX,
-        Materials,
         Collisions,
         Terrain,
         Saving,
@@ -40,10 +44,7 @@ namespace TPCombat.Debug
         Inventory,
         Abilities,
         ResourcesSystems,
-        Enemies,
-        NPCs,
-        Animation,
-        Managers
+        NPCs
     }
 
     public enum LogFrequency : byte
@@ -91,7 +92,8 @@ namespace TPCombat.Debug
             {LogCategory.Enemies, true},
             {LogCategory.NPCs, true},
             {LogCategory.Animation, true},
-            {LogCategory.Managers, true}
+            {LogCategory.Managers, true},
+            {LogCategory.Combat, true}
         };
 
         private static readonly Dictionary<LogFrequency, bool> _logFrequencyEnabled = new Dictionary<LogFrequency, bool>()

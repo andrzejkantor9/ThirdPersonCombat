@@ -3,6 +3,8 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+using TPCombat.Debug;
+
 namespace TPCombat.Input
 {
     public class InputReader : MonoBehaviour, Controls.IPlayerActions
@@ -18,12 +20,15 @@ namespace TPCombat.Input
         #endregion
 
         #region States
+        public bool IsAttacking {get; private set;}
         public Vector2 MovementValue {get; private set;}
         #endregion
 
         #region Events & Statics
-        public event Action onJumpEvent;
-        public event Action onDodgeEvent;
+        public event Action onJumpInput;
+        public event Action onDodgeInput;
+        public event Action onTargetInput;
+        public event Action onCancelInput;
         #endregion
 
         #region Data
@@ -54,7 +59,7 @@ namespace TPCombat.Input
         {
             if(context.performed)
             {
-                onJumpEvent?.Invoke();
+                onJumpInput?.Invoke();
             }
         }
 
@@ -62,7 +67,7 @@ namespace TPCombat.Input
         {
             if(context.performed)
             {
-                onDodgeEvent?.Invoke();
+                onDodgeInput?.Invoke();
             }
         }
 
@@ -73,6 +78,36 @@ namespace TPCombat.Input
 
         public void OnLook(InputAction.CallbackContext context)
         {
+        }
+
+        public void OnTarget(InputAction.CallbackContext context)
+        {
+            if(context.performed)
+            {
+                onTargetInput?.Invoke();
+            }
+        }
+
+        public void OnCancel(InputAction.CallbackContext context)
+        {
+            if(context.performed)
+            {
+                onCancelInput?.Invoke();
+            }
+        }
+
+        public void OnAttack(InputAction.CallbackContext context)
+        {
+            if(context.performed)
+            {
+                IsAttacking = true;
+                CustomLogger.Log("attack input start", this, LogCategory.Input, LogFrequency.Frequent, LogDetails.Basic);
+            }
+            else if(context.canceled)
+            {
+                IsAttacking = false;
+                CustomLogger.Log("attack input end", this, LogCategory.Input, LogFrequency.Frequent, LogDetails.Basic);
+            }
         }
         #endregion
 
