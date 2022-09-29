@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using TPCombat.Debug;
+using TPCombat.Physics;
 
 namespace TPCombat.Combat
 {
@@ -21,7 +22,8 @@ namespace TPCombat.Combat
 
         #region States
         List<Collider> _alreadyCollidedWith = new List<Collider>();
-        private int _damage;
+        int _damage;
+        float _knockback;
         #endregion
 
         #region Events & Statics
@@ -45,19 +47,28 @@ namespace TPCombat.Combat
 
         private void OnTriggerEnter(Collider other) 
         {
-            if(other != _selfCollider && other.TryGetComponent<Health>(out Health health)
-                && !_alreadyCollidedWith.Contains(other))
+            if(other != _selfCollider && !_alreadyCollidedWith.Contains(other))
             {
-                health.DealDamage(_damage);
-                _alreadyCollidedWith.Add(other);
+                if(other.TryGetComponent<Health>(out Health health))
+                {
+                    health.DealDamage(_damage);
+                    _alreadyCollidedWith.Add(other);
+                }
+
+                if(other.TryGetComponent<ForceReceiver>(out ForceReceiver forceReceiver))
+                {
+                    Vector3 direction = (other.transform.position - _selfCollider.transform.position).normalized;
+                    forceReceiver.AddForce(direction * _knockback);
+                }
             }
         }
         #endregion
 
         #region PublicMethods
-        public void SetAttackDamage(int damage)
+        public void SetAttack(int damage, float knockback)
         {
             _damage = damage;
+            _knockback = knockback;
         }
         #endregion
 

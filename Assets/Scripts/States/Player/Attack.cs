@@ -25,6 +25,8 @@ namespace TPCombat.States.Player
         public float ForceTime {get; private set;}
         [field: SerializeField]
         public float Force {get; private set;}
+        [field: SerializeField]
+        public float Knockback {get; private set;}
         #endregion
 
         #region Cache

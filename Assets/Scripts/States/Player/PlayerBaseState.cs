@@ -17,7 +17,7 @@ namespace TPCombat.States.Player
         }
         #endregion
 
-        #region Interfaces & Inheritance
+        #region Private & Protected
         protected void Move(float deltaTime)
         {
             Move(Vector3.zero, deltaTime);
@@ -37,6 +37,18 @@ namespace TPCombat.States.Player
                 lookPosition.y = 0f;
 
                 _stateMachine.transform.rotation = Quaternion.LookRotation(lookPosition);
+            }
+        }
+
+        protected void ReturnToLocomotion()
+        {
+            if(_stateMachine.Targeter.CurrentTarget)
+            {
+                _stateMachine.SwitchState(new PlayerTargetingState(_stateMachine));
+            }
+            else
+            {
+                _stateMachine.SwitchState(new PlayerFreeLookState(_stateMachine));
             }
         }
         #endregion

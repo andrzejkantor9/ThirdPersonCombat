@@ -60,6 +60,10 @@ namespace TPCombat.States.Player
             {
                 _stateMachine.SwitchState(new PlayerAttackingState(_stateMachine, 0));
             }
+            else if(_stateMachine.InputReader.IsBlocking)
+            {
+                _stateMachine.SwitchState(new PlayerBlockingState(_stateMachine));
+            }
             else if(!_stateMachine.Targeter.CurrentTarget)
             {
                 _stateMachine.SwitchState(new PlayerFreeLookState(_stateMachine));

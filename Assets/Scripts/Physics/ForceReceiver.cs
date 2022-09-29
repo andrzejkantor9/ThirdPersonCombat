@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 using TPCombat.Debug;
 
@@ -17,6 +18,10 @@ namespace TPCombat.Physics
     	[Space(8f)]
         [SerializeField]
         CharacterController _characterController;
+        [SerializeField]
+        NavMeshAgent _navMeshAgent;
+        
+        const float FINISH_IMPACT_THRESHOLD = 0.2f;
         #endregion
 
         #region States
@@ -53,6 +58,11 @@ namespace TPCombat.Physics
             }
 
             _impact = Vector3.SmoothDamp(_impact, Vector3.zero, ref _dampingVelocity, _drag);
+            if(_navMeshAgent && _impact.sqrMagnitude < FINISH_IMPACT_THRESHOLD * FINISH_IMPACT_THRESHOLD)
+            {
+                _impact = Vector3.zero;
+                _navMeshAgent.enabled = true;
+            }
         }
         #endregion
 
@@ -60,6 +70,10 @@ namespace TPCombat.Physics
         public void AddForce(Vector3 force)
         {
             _impact += force;
+            if(_navMeshAgent)
+            {
+                _navMeshAgent.enabled = false;
+            }
         }
         #endregion
 

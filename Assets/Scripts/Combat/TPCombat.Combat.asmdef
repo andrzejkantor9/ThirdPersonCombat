@@ -2,7 +2,9 @@
     "name": "TPCombat.Combat",
     "rootNamespace": "TPCombat.Combat",
     "references": [
-        "GUID:0febe1ed11a0f124ba9fc0de7b191803"
+        "GUID:0febe1ed11a0f124ba9fc0de7b191803",
+        "GUID:a1f6f21401e699f42b7c1c7b84719941",
+        "GUID:4307f53044263cf4b835bd812fc161a4"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -6,6 +6,11 @@ namespace TPCombat.States
 {
     public abstract class State
     {
+        #region Cache & Constants
+        private const string ATTACK_TAG = "Attack";
+        #endregion
+
+        #region Interfaces & Inheritance
         public virtual void Enter()
         {
             CustomLogger.Log($"Enter state: {this.GetType().Name}", this, LogCategory.Input, LogFrequency.Frequent, LogDetails.Basic);
@@ -19,5 +24,21 @@ namespace TPCombat.States
         {
             CustomLogger.Log($"Exit state {this.GetType().Name}", this, LogCategory.Input, LogFrequency.Frequent, LogDetails.Basic);
         }
+        #endregion
+
+        #region Private & Proteceted
+        protected float GetNormalizedTime(Animator animator)
+        {
+            AnimatorStateInfo currentInfo = animator.GetCurrentAnimatorStateInfo(0);
+            AnimatorStateInfo nextInfo = animator.GetNextAnimatorStateInfo(0);
+
+            if(animator.IsInTransition(0) && nextInfo.IsTag(ATTACK_TAG))
+                return nextInfo.normalizedTime;
+            else if(!animator.IsInTransition(0) && currentInfo.IsTag(ATTACK_TAG))
+                return currentInfo.normalizedTime;
+            else
+                return 0f;
+        }
+        #endregion
     }
 }

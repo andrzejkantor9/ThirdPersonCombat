@@ -21,6 +21,8 @@ namespace TPCombat.Input
 
         #region States
         public bool IsAttacking {get; private set;}
+        public bool IsBlocking {get; private set;}
+
         public Vector2 MovementValue {get; private set;}
         #endregion
 
@@ -107,6 +109,20 @@ namespace TPCombat.Input
             {
                 IsAttacking = false;
                 CustomLogger.Log("attack input end", this, LogCategory.Input, LogFrequency.Frequent, LogDetails.Basic);
+            }
+        }
+
+        public void OnBlock(InputAction.CallbackContext context)
+        {
+            if(context.performed)
+            {
+                IsBlocking = true;
+                CustomLogger.Log("block input start", this, LogCategory.Input, LogFrequency.Frequent, LogDetails.Basic);
+            }
+            else if(context.canceled)
+            {
+                IsBlocking = false;
+                CustomLogger.Log("block input end", this, LogCategory.Input, LogFrequency.Frequent, LogDetails.Basic);
             }
         }
         #endregion

@@ -14,8 +14,6 @@ namespace TPCombat.States.Player
         #region Cache & Constants
         //[Header("CACHE")]
         //[Space(8f)]
-
-        private const string ATTACK_TAG = "Attack";
         #endregion
 
         #region States
@@ -50,7 +48,7 @@ namespace TPCombat.States.Player
 
             CustomLogger.Log($"attack name: {_attack.AnimationName}", this, LogCategory.Combat, LogFrequency.Frequent, LogDetails.Basic);
 
-            _stateMachine.WeaponDamage.SetAttackDamage(_attack.Damage);
+            _stateMachine.WeaponDamage.SetAttack(_attack.Damage, _attack.Knockback);
             _stateMachine.Animator.CrossFadeInFixedTime(_attack.AnimationName, _attack.TrasitionDuration);
         }
         public override void Tick(float deltaTime)
@@ -59,7 +57,7 @@ namespace TPCombat.States.Player
 
             Move(deltaTime);
             FaceTarget();
-            float normalizedTime = GetNormalizedTime();
+            float normalizedTime = GetNormalizedTime(_stateMachine.Animator);
 
             if(normalizedTime < 1f)
             {
@@ -98,19 +96,6 @@ namespace TPCombat.States.Player
         #endregion
 
         #region PrivateMethods
-        float GetNormalizedTime()
-        {
-            AnimatorStateInfo currentInfo = _stateMachine.Animator.GetCurrentAnimatorStateInfo(0);
-            AnimatorStateInfo nextInfo = _stateMachine.Animator.GetNextAnimatorStateInfo(0);
-
-            if(_stateMachine.Animator.IsInTransition(0) && nextInfo.IsTag(ATTACK_TAG))
-                return nextInfo.normalizedTime;
-            else if(!_stateMachine.Animator.IsInTransition(0) && currentInfo.IsTag(ATTACK_TAG))
-                return currentInfo.normalizedTime;
-            else
-                return 0f;
-        }
-
         void TryComboAttack(float normalizedTime)
         {
             if(_attack.ComboStateIndex != -1 && normalizedTime >= _attack.ComboAttackTime)

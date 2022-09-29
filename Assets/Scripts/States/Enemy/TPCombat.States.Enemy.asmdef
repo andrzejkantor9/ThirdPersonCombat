@@ -1,0 +1,19 @@
+{
+    "name": "TPCombat.States.Enemy",
+    "rootNamespace": "TPCombat.States.Enemy",
+    "references": [
+        "GUID:0febe1ed11a0f124ba9fc0de7b191803",
+        "GUID:0230001a3a45c464c8a82041e109d202",
+        "GUID:a1f6f21401e699f42b7c1c7b84719941",
+        "GUID:1e86478be84aa6b40a1124da9f6e00bf"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

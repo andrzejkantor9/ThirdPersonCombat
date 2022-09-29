@@ -14,7 +14,7 @@ namespace TPCombat.Combat
         [Header("CACHE")]
     	//[Space(8f)]
         [SerializeField]
-        Transform _weaponLogic;
+        GameObject _weaponLogic;
         #endregion
 
         #region States
@@ -31,19 +31,19 @@ namespace TPCombat.Combat
         #region EngineMethods & Contructors
         private void Awake() 
         {
-            CustomLogger.AssertNotNull(_weaponLogic, "_weaponLogic", this);
+            CustomLogger.AssertNotNull(_weaponLogic.transform, "_weaponLogic", this);
         }
         #endregion
 
         #region PublicMethods
         public void EnableWeapon()
         {
-            _weaponLogic.gameObject.SetActive(true);
+            _weaponLogic.SetActive(true);
         }
 
         public void DisableWeapon()
         {
-            _weaponLogic.gameObject.SetActive(false);
+            _weaponLogic.SetActive(false);
         }
         #endregion
 
