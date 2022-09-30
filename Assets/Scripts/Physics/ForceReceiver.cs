@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 using TPCombat.Debug;
+using System;
 
 namespace TPCombat.Physics
 {
@@ -74,6 +75,17 @@ namespace TPCombat.Physics
             {
                 _navMeshAgent.enabled = false;
             }
+        }
+
+        public void Jump(float jumpForce)
+        {
+            _verticalVelocity += jumpForce;
+        }
+
+        public void Reset()
+        {
+            _verticalVelocity = 0f;
+            _impact = Vector3.zero;
         }
         #endregion
 

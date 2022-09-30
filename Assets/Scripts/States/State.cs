@@ -7,7 +7,6 @@ namespace TPCombat.States
     public abstract class State
     {
         #region Cache & Constants
-        private const string ATTACK_TAG = "Attack";
         #endregion
 
         #region Interfaces & Inheritance
@@ -27,14 +26,14 @@ namespace TPCombat.States
         #endregion
 
         #region Private & Proteceted
-        protected float GetNormalizedTime(Animator animator)
+        protected float GetNormalizedTime(Animator animator, string tag)
         {
             AnimatorStateInfo currentInfo = animator.GetCurrentAnimatorStateInfo(0);
             AnimatorStateInfo nextInfo = animator.GetNextAnimatorStateInfo(0);
 
-            if(animator.IsInTransition(0) && nextInfo.IsTag(ATTACK_TAG))
+            if(animator.IsInTransition(0) && nextInfo.IsTag(tag))
                 return nextInfo.normalizedTime;
-            else if(!animator.IsInTransition(0) && currentInfo.IsTag(ATTACK_TAG))
+            else if(!animator.IsInTransition(0) && currentInfo.IsTag(tag))
                 return currentInfo.normalizedTime;
             else
                 return 0f;

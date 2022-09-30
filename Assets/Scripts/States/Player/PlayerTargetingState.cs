@@ -1,6 +1,7 @@
 using UnityEngine;
 
 using TPCombat.Debug;
+using System;
 
 namespace TPCombat.States.Player
 {
@@ -45,8 +46,9 @@ namespace TPCombat.States.Player
         {
             base.Enter();
 
-            _stateMachine.InputReader.onCancelInput += OnCancel;
             _stateMachine.InputReader.onTargetInput += OnCancel;
+            _stateMachine.InputReader.onDodgeInput += Dodge;
+            _stateMachine.InputReader.onJumpInput += Jump;
 
             _stateMachine.Animator.CrossFadeInFixedTime(TARGETING_BLEND_TREE_ANIMID, CROSS_FADE_DURATION);
         }
@@ -70,7 +72,7 @@ namespace TPCombat.States.Player
             }
             else
             {
-                Vector3 movement = CalculateMovement();
+                Vector3 movement = CalculateMovement(deltaTime);
                 Move(movement * _stateMachine.TargetingMovementSpeed, deltaTime);
 
                 UpdateAnimator(deltaTime);
@@ -81,10 +83,10 @@ namespace TPCombat.States.Player
         public override void Exit()
         {
             base.Exit();
-            _stateMachine.InputReader.onCancelInput -= OnCancel;
             _stateMachine.InputReader.onTargetInput -= OnCancel;
+            _stateMachine.InputReader.onDodgeInput -= Dodge;
+            _stateMachine.InputReader.onJumpInput -= Jump;
         }
-        
         #endregion
 
         #region Events & Statics
@@ -93,13 +95,26 @@ namespace TPCombat.States.Player
             _stateMachine.Targeter.Cancel();
             _stateMachine.SwitchState(new PlayerFreeLookState(_stateMachine));
         }
+
+        void Jump()
+        {
+            _stateMachine.SwitchState(new PlayerJumpingState(_stateMachine));
+        }
+
+        void Dodge()
+        {
+            if(_stateMachine.InputReader.MovementValue != Vector2.zero)
+            {
+                _stateMachine.SwitchState(new PlayerDodgingState(_stateMachine, _stateMachine.InputReader.MovementValue));
+            }
+        }
         #endregion
 
         #region PrivateMethods
-        Vector3 CalculateMovement()
+        Vector3 CalculateMovement(float deltaTime)
         {
             Vector3 movement = new Vector3();
-
+        
             movement += _stateMachine.transform.right * _stateMachine.InputReader.MovementValue.x;
             movement += _stateMachine.transform.forward  * _stateMachine.InputReader.MovementValue.y;
 

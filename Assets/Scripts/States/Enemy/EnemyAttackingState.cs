@@ -14,6 +14,7 @@ namespace TPCombat.States.Enemy
 
         readonly int ATTACK_ANIMID = Animator.StringToHash("Attack");
 
+        const string ATTACK_TAG = "Attack";
         const float TRASITION_DURATION = 0.1f;
         #endregion
 
@@ -52,7 +53,7 @@ namespace TPCombat.States.Enemy
 
             FacePlayer();
 
-            if(GetNormalizedTime(_stateMachine.Animator) >= 1f)
+            if(GetNormalizedTime(_stateMachine.Animator, ATTACK_TAG) >= 1f)
             {
                 _stateMachine.SwitchState(new EnemyChasingState(_stateMachine));
             }

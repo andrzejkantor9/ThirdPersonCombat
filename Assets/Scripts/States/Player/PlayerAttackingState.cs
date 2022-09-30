@@ -14,6 +14,8 @@ namespace TPCombat.States.Player
         #region Cache & Constants
         //[Header("CACHE")]
         //[Space(8f)]
+
+        const string ATTACK_TAG = "Attack";
         #endregion
 
         #region States
@@ -57,7 +59,7 @@ namespace TPCombat.States.Player
 
             Move(deltaTime);
             FaceTarget();
-            float normalizedTime = GetNormalizedTime(_stateMachine.Animator);
+            float normalizedTime = GetNormalizedTime(_stateMachine.Animator, ATTACK_TAG);
 
             if(normalizedTime < 1f)
             {

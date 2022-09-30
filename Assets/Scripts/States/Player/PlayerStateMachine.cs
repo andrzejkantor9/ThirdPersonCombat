@@ -8,6 +8,8 @@ using TPCombat.Combat;
 
 //add sounds
 
+//bug: climbing - player goes back a little after end of animation
+
 //target & health as one component - Damagable?
     //or two non-inspector components and one component to add to inspector
     //*array of thresholds to raise events
@@ -23,6 +25,13 @@ namespace TPCombat.States.Player
         public float TargetingMovementSpeed {get; private set;}
         [field: SerializeField]
         public float RotationDamping {get; private set;}
+
+        [field: SerializeField]
+        public float DodgeDuration {get; private set;}
+        [field: SerializeField]
+        public float DodgeDistance {get; private set;}
+        [field: SerializeField]
+        public  float JumpForce {get; private set;}
         #endregion
 
         #region Cache
@@ -40,17 +49,22 @@ namespace TPCombat.States.Player
         public  ForceReceiver ForceReceiver {get; private set;}
         [field: SerializeField]
         public  Ragdoll Ragdoll {get; private set;}
+        [field: SerializeField]
+        public  LedgeDetector LedgeDetector {get; private set;}
+        [field: SerializeField]
+        public  Transform WarpPositionAfterClimb {get; private set;}
 
         [field: SerializeField]
         public Targeter Targeter {get; private set;}
         [field: SerializeField]
-        public Attack[] Attacks {get; private set;}
-        [field: SerializeField]
         public WeaponDamage WeaponDamage {get; private set;}
         [field: SerializeField]
         public Health Health {get; private set;}
+        [field: SerializeField]
+        public Attack[] Attacks {get; private set;}
 
         public Transform MainCameraTransform {get; private set;}
+        public float PreviousDodgeTime {get; private set;} = Mathf.NegativeInfinity;
         #endregion
 
         #region States
@@ -73,6 +87,8 @@ namespace TPCombat.States.Player
             CustomLogger.AssertNotNull(CharacterController, "CharacterController", this);
             CustomLogger.AssertNotNull(ForceReceiver, "ForceReceiver", this);
             CustomLogger.AssertNotNull(Ragdoll, "Ragdoll", this);
+            CustomLogger.AssertNotNull(LedgeDetector, "LedgeDetector", this);
+            CustomLogger.AssertNotNull(WarpPositionAfterClimb, "WarpPositionAfterClimb", this);
 
             CustomLogger.AssertNotNull(Targeter, "Targeter", this);
             CustomLogger.AssertNotNull(WeaponDamage, "WeaponDamage", this);
@@ -81,6 +97,8 @@ namespace TPCombat.States.Player
         
         private void Start() 
         {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
             MainCameraTransform = Camera.main.transform;
 
             SwitchState(new PlayerFreeLookState(this));

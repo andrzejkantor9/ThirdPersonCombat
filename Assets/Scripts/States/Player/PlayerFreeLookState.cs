@@ -15,6 +15,8 @@ namespace TPCombat.States.Player
         //[Header("CACHE")]
         //[Space(8f)]
 
+        bool _shouldFade;
+
         readonly int FREE_LOOK_SPEED_ANIMID = Animator.StringToHash("FreeLookSpeed");
         readonly int FREE_LOOK_BLEND_TREE_ANIMID = Animator.StringToHash("FreeLookBlendTree");
 
@@ -34,8 +36,9 @@ namespace TPCombat.States.Player
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
         #region EngineMethods & Contructors
-        public PlayerFreeLookState(PlayerStateMachine stateMachine) : base(stateMachine)
+        public PlayerFreeLookState(PlayerStateMachine stateMachine, bool shouldFade = true) : base(stateMachine)
         {
+            _shouldFade = shouldFade;
         }
         #endregion
 
@@ -47,9 +50,19 @@ namespace TPCombat.States.Player
         {
             base.Enter();
             
-            _stateMachine.InputReader.onTargetInput += OnTarget;
+            _stateMachine.InputReader.onTargetInput += Target;
+            _stateMachine.InputReader.onJumpInput += Jump;
 
-            _stateMachine.Animator.CrossFadeInFixedTime(FREE_LOOK_BLEND_TREE_ANIMID, CROSS_FADE_DURATION);
+            _stateMachine.Animator.SetFloat(FREE_LOOK_SPEED_ANIMID, 0f);
+
+            if(_shouldFade)
+            {
+                _stateMachine.Animator.CrossFadeInFixedTime(FREE_LOOK_BLEND_TREE_ANIMID, CROSS_FADE_DURATION);
+            }
+            else
+            {
+                _stateMachine.Animator.Play(FREE_LOOK_BLEND_TREE_ANIMID);
+            }
         }
         
         public override void Tick(float deltaTime)
@@ -79,17 +92,24 @@ namespace TPCombat.States.Player
         public override void Exit()
         {
             base.Exit();
-            _stateMachine.InputReader.onTargetInput -= OnTarget;
+
+            _stateMachine.InputReader.onTargetInput -= Target;
+            _stateMachine.InputReader.onJumpInput -= Jump;
         }
         #endregion
 
         #region Events & Statics
-        void OnTarget()
+        void Target()
         {
             if(_stateMachine.Targeter.SelectTarget())
             {
                 _stateMachine.SwitchState(new PlayerTargetingState(_stateMachine));
             }
+        }
+
+        void Jump()
+        {
+            _stateMachine.SwitchState(new PlayerJumpingState(_stateMachine));
         }
         #endregion
 
