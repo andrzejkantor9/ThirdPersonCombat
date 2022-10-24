@@ -40,5 +40,5 @@ Right shoulder | Shift | dodge (targeting state)
 + No UI
 + No death / quit menu (need to use alt + f4)
 
-### Course links
+### Course link
 - [link](https://www.gamedev.tv/p/unity-3rd-person-combat/?coupon_code=AUTUMN)
