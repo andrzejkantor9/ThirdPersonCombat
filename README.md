@@ -1,7 +1,7 @@
 ### Project Information
 Basic Third Person melee combat prototype. 
-Using input system, cinemachine, Mixamo.com animations. Supports controller. 
-Has attack sequence, block, dodge, camera lock, climbing. 
+It is using input system, cinemachine, Mixamo.com animations. Input supports controller. 
+It has attack sequence, block, dodge, camera lock, climbing features. 
 Majority of code is driven by state machine.
 - [Project image album](https://imgur.com/a/EATo5qx)
 - [Production build as zip](https://drive.google.com/file/d/1_5O5a4AqhOfYXHF0i3chk3EISStes-OM/view?usp=sharing)
